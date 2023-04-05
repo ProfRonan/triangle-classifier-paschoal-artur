@@ -1,0 +1,44 @@
+{
+  "tests": [
+    {
+      "name": "Not a triangle",
+      "setup": "sudo -H pip3 install pytest",
+      "run": "pytest test_main.py -k test_não_é_um_triângulo",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 25
+    },
+    {
+      "name": "Equilatero",
+      "setup": "sudo -H pip3 install pytest",
+      "run": "pytest test_main.py -k test_equilátero",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 25
+    },
+    {
+      "name": "Isosceles",
+      "setup": "sudo -H pip3 install pytest",
+      "run": "pytest test_main.py -k test_isósceles",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 25
+    },
+    {
+      "name": "Escaleno",
+      "setup": "sudo -H pip3 install pytest",
+      "run": "pytest test_main.py -k test_escaleno",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 1,
+      "points": 25
+    }
+  ]
+}
