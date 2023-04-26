@@ -1,107 +1,126 @@
-import builtins
-import importlib
-import io
-import sys
+"""Test file for testing the main.py file"""
 
-import pytest
-from pytest import MonkeyPatch
+import unittest
+from unittest.mock import patch
+import io # for capturing the output
+import sys # for restoring the stdout and removing the main module from the cache
+import importlib # for importing the main.py file
 
+class TestMain(unittest.TestCase):
+    """Class for testing the main.py file"""
 
-@pytest.mark.parametrize(
-    "test_input",
-    [
-        ["1", "1", "1"],
-        ["2", "2", "2"],
-        ["5", "5", "5"],
-    ],
-)
-def test_equilátero(monkeypatch: MonkeyPatch, test_input: str):
-    mocked_input = lambda prompt="": test_input.pop(0)
-    mocked_stdout = io.StringIO()
-
-    with monkeypatch.context() as m:
-        m.setattr(builtins, "input", mocked_input)
-        m.setattr(sys, "stdout", mocked_stdout)
-
+    def setUp(self):
+        """Sets up the test environment by removing the main module from the cache"""
+        super().setUp()
         sys.modules.pop("main", None)
-        importlib.import_module(name="main", package="files")
 
-    assert "Não é um triângulo" not in mocked_stdout.getvalue().strip()
-    assert "Equilátero" in mocked_stdout.getvalue().strip()
-    assert "Isósceles" not in mocked_stdout.getvalue().strip()
-    assert "Escaleno" not in mocked_stdout.getvalue().strip()
+    @patch("builtins.input", side_effect=["1", "1", "1"])
+    def test_1_1_1(self, _mock_input):
+        """Testa se o programa responde "Equilátero" quando o usuário digita 1, 1, 1"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        importlib.import_module("main")
+        sys.stdout = sys.__stdout__
+        self.assertIn("Equilátero", captured_output.getvalue().strip())
+        self.assertNotIn("Não é um triângulo", captured_output.getvalue().strip())
+        self.assertNotIn("Isósceles", captured_output.getvalue().strip())
+        self.assertNotIn("Escaleno", captured_output.getvalue().strip())
 
+    @patch("builtins.input", side_effect=["5", "5", "5"])
+    def test_5_5_5(self, _mock_input):
+        """Testa se o programa responde "Equilátero" quando o usuário digita 5, 5, 5"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        importlib.import_module("main")
+        sys.stdout = sys.__stdout__
+        self.assertIn("Equilátero", captured_output.getvalue().strip())
+        self.assertNotIn("Não é um triângulo", captured_output.getvalue().strip())
+        self.assertNotIn("Isósceles", captured_output.getvalue().strip())
+        self.assertNotIn("Escaleno", captured_output.getvalue().strip())
 
-@pytest.mark.parametrize(
-    "test_input",
-    [
-        ["2", "2", "3"],
-        ["3", "2", "2"],
-        ["2", "3", "2"],
-    ],
-)
-def test_isósceles(monkeypatch: MonkeyPatch, test_input: str):
-    mocked_input = lambda prompt="": test_input.pop(0)
-    mocked_stdout = io.StringIO()
+    @patch("builtins.input", side_effect=["1", "2", "3"])
+    def test_1_2_3(self, _mock_input):
+        """Testa se o programa responde "Não é um triângulo" quando o usuário digita 1, 2, 3"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        importlib.import_module("main")
+        sys.stdout = sys.__stdout__
+        self.assertIn("Não é um triângulo", captured_output.getvalue().strip())
+        self.assertNotIn("Equilátero", captured_output.getvalue().strip())
+        self.assertNotIn("Isósceles", captured_output.getvalue().strip())
+        self.assertNotIn("Escaleno", captured_output.getvalue().strip())
 
-    with monkeypatch.context() as m:
-        m.setattr(builtins, "input", mocked_input)
-        m.setattr(sys, "stdout", mocked_stdout)
+    @patch("builtins.input", side_effect=["3", "2", "1"])
+    def test_3_2_1(self, _mock_input):
+        """Testa se o programa responde "Não é um triângulo" quando o usuário digita 3, 2, 1"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        importlib.import_module("main")
+        sys.stdout = sys.__stdout__
+        self.assertIn("Não é um triângulo", captured_output.getvalue().strip())
+        self.assertNotIn("Equilátero", captured_output.getvalue().strip())
+        self.assertNotIn("Isósceles", captured_output.getvalue().strip())
+        self.assertNotIn("Escaleno", captured_output.getvalue().strip())
 
-        sys.modules.pop("main", None)
-        importlib.import_module(name="main", package="files")
+    @patch("builtins.input", side_effect=["1", "2", "4"])
+    def test_1_2_4(self, _mock_input):
+        """Testa se o programa responde "Escaleno" quando o usuário digita 1, 2, 4"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        importlib.import_module("main")
+        sys.stdout = sys.__stdout__
+        self.assertIn("Escaleno", captured_output.getvalue().strip())
+        self.assertNotIn("Não é um triângulo", captured_output.getvalue().strip())
+        self.assertNotIn("Equilátero", captured_output.getvalue().strip())
+        self.assertNotIn("Isósceles", captured_output.getvalue().strip())
 
-    assert "Não é um triângulo" not in mocked_stdout.getvalue().strip()
-    assert "Equilátero" not in mocked_stdout.getvalue().strip()
-    assert "Isósceles" in mocked_stdout.getvalue().strip()
-    assert "Escaleno" not in mocked_stdout.getvalue().strip()
+    @patch("builtins.input", side_effect=["4", "2", "1"])
+    def test_4_2_1(self, _mock_input):
+        """Testa se o programa responde "Escaleno" quando o usuário digita 4, 2, 1"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        importlib.import_module("main")
+        sys.stdout = sys.__stdout__
+        self.assertIn("Escaleno", captured_output.getvalue().strip())
+        self.assertNotIn("Não é um triângulo", captured_output.getvalue().strip())
+        self.assertNotIn("Equilátero", captured_output.getvalue().strip())
+        self.assertNotIn("Isósceles", captured_output.getvalue().strip())
 
+    @patch("builtins.input", side_effect=["1", "1", "4"])
+    def test_1_1_4(self, _mock_input):
+        """Testa se o programa responde "Isósceles" quando o usuário digita 1, 1, 4"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        importlib.import_module("main")
+        sys.stdout = sys.__stdout__
+        self.assertIn("Isósceles", captured_output.getvalue().strip())
+        self.assertNotIn("Não é um triângulo", captured_output.getvalue().strip())
+        self.assertNotIn("Equilátero", captured_output.getvalue().strip())
+        self.assertNotIn("Escaleno", captured_output.getvalue().strip())
 
-@pytest.mark.parametrize(
-    "test_input",
-    [
-        ["2", "3", "4"],
-        ["2", "4", "3"],
-        ["4", "2", "3"],
-    ],
-)
-def test_escaleno(monkeypatch: MonkeyPatch, test_input: str):
-    mocked_input = lambda prompt="": test_input.pop(0)
-    mocked_stdout = io.StringIO()
+    @patch("builtins.input", side_effect=["1", "4", "1"])
+    def test_1_4_1(self, _mock_input):
+        """Testa se o programa responde "Isósceles" quando o usuário digita 1, 4, 1"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        importlib.import_module("main")
+        sys.stdout = sys.__stdout__
+        self.assertIn("Isósceles", captured_output.getvalue().strip())
+        self.assertNotIn("Não é um triângulo", captured_output.getvalue().strip())
+        self.assertNotIn("Equilátero", captured_output.getvalue().strip())
+        self.assertNotIn("Escaleno", captured_output.getvalue().strip())
 
-    with monkeypatch.context() as m:
-        m.setattr(builtins, "input", mocked_input)
-        m.setattr(sys, "stdout", mocked_stdout)
+    @patch("builtins.input", side_effect=["4", "1", "1"])
+    def test_4_1_1(self, _mock_input):
+        """Testa se o programa responde "Isósceles" quando o usuário digita 4, 1, 1"""
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+        importlib.import_module("main")
+        sys.stdout = sys.__stdout__
+        self.assertIn("Isósceles", captured_output.getvalue().strip())
+        self.assertNotIn("Não é um triângulo", captured_output.getvalue().strip())
+        self.assertNotIn("Equilátero", captured_output.getvalue().strip())
+        self.assertNotIn("Escaleno", captured_output.getvalue().strip())
 
-        sys.modules.pop("main", None)
-        importlib.import_module(name="main", package="files")
-
-    assert "Não é um triângulo" not in mocked_stdout.getvalue().strip()
-    assert "Equilátero" not in mocked_stdout.getvalue().strip()
-    assert "Isósceles" not in mocked_stdout.getvalue().strip()
-    assert "Escaleno" in mocked_stdout.getvalue().strip()
-
-
-@pytest.mark.parametrize(
-    "test_input",
-    [
-        ["1", "2", "3"],
-        ["1", "3", "2"],
-        ["3", "1", "2"],
-    ],
-)
-def test_não_é_um_triângulo(monkeypatch: MonkeyPatch, test_input: str):
-    mocked_input = lambda prompt="": test_input.pop(0)
-    mocked_stdout = io.StringIO()
-
-    with monkeypatch.context() as m:
-        m.setattr(builtins, "input", mocked_input)
-        m.setattr(sys, "stdout", mocked_stdout)
-
-        sys.modules.pop("main", None)
-        importlib.import_module(name="main", package="files")
-
-    assert "Não é um triângulo" in mocked_stdout.getvalue().strip()
-    assert "Equilátero" not in mocked_stdout.getvalue().strip()
-    assert "Isósceles" not in mocked_stdout.getvalue().strip()
-    assert "Escaleno" not in mocked_stdout.getvalue().strip()
+if __name__ == "__main__":
+    unittest.main()
